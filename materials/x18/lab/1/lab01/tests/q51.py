@@ -18,7 +18,7 @@ test = {
           >>> # Use .sort("1970", descending=True) to sort in descreasing order.
           >>> print(top_1970.take(0))
           Row Labels    | 1970
-          United States | 11.3
+          United States | 11
           """,
           'hidden': False,
           'locked': False
