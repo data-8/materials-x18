@@ -1,15 +1,24 @@
 test = {
-  'name': '',
+  'name': '5.2',
   'points': 1,
   'suites': [
     {
       'cases': [
         {
           'code': r"""
-          >>> type(imdb_sorted) == tables.Table
+          >>> # Use .select("Row Labels", "1970", "2009") to select the columns.
+          >>> top_1970_with_2009.labels == ("Row Labels", "1970", "2009")
           True
-          >>> list(imdb_sorted.column('Title').take(range(4)))
-          ['The Shawshank Redemption', 'The Godfather', 'The Godfather: Part II', 'Pulp Fiction']
+          """,
+          'hidden': False,
+          'locked': False
+        },
+        {
+          'code': r"""
+          >>> # Use .sort("1970", descending=True) to sort in descreasing order.
+          >>> print(top_1970_with_2009.take(0))
+          Row Labels    | 1970 | 2009
+          United States | 11.3 | 13.7
           """,
           'hidden': False,
           'locked': False
