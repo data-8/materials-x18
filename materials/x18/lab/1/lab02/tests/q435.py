@@ -6,7 +6,7 @@ test = {
       'cases': [
         {
           'code': r"""
-          >>> all(powers_of_2 == 2 ** np.arange(15))
+          >>> np.all(powers_of_2 == 2 ** np.arange(15))
           True
           """,
           'hidden': False,
