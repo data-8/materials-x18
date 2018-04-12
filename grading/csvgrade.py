@@ -22,7 +22,7 @@ def post_grades(grades_csv_path, launch_infos, consumer_key, consumer_secret):
         reader = csv.reader(f)
         for row in reader:
             user, score = row
-            if user in launch_infos:
+            if user in launch_infos and float(score) != 0.0:
                 lti_launch_info = launch_infos[user]
                 post_grade(
                     lti_launch_info['lis_result_sourcedid'],
