@@ -4,6 +4,7 @@ Post grades to EdX from a CSV file
 import argparse
 import csv
 import json
+import time
 import os
 from postgrade import post_grade
 
@@ -32,8 +33,7 @@ def post_grades(grades_csv_path, launch_infos, consumer_key, consumer_secret):
                     score
                 )
                 print(f'Posted {score} for {user}')
-            else:
-                print(f'Skipping {user}')
+                time.sleep(1)
 
 
 def main():
