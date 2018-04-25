@@ -118,6 +118,9 @@ async def grade_lab(user_id, launch_info, lab, grader_image):
         content = f.read().encode('utf-8')
         stdout, stderr = await process.communicate(content)
         for line in stderr.decode('utf-8').split('\n'):
+            if 'Killed' in line:
+                # Our container was killed, so let's just skip this one
+                return
             if not line.startswith('WARNING:'):
                 print(line)
     grade = float(stdout)
