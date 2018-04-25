@@ -139,6 +139,7 @@ async def grade_lab(homedir_base, user_id, launch_info, lab, grader_image):
                 return False
             if not line.startswith('WARNING:'):
                 print(line)
+                raise Exception("Found unrecognized output in stderr from {}, halting".format(' '.join(command)))
     grade = float(stdout)
     if grade != 0.0:
         await post_grade(
