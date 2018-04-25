@@ -40,6 +40,11 @@ argparser.add_argument(
     default='prod-hubshard-sharder-db',
     help='Database to connect to on postgres host'
 )
+argparser.add_argument(
+    '--homedir-base',
+    default='/export/pool0/homes',
+    help='Base path where all user homedirs are'
+)
 
 args = argparser.parse_args()
 
@@ -63,7 +68,7 @@ async def main():
             (args.resource_link_id, )
         )
         grade_coros = (
-            grade_lab(row['user_id'], row['launch_info'], args.lab, args.image)
+            grade_lab(args.homedir_base, row['user_id'], row['launch_info'], args.lab, args.image)
             for row in cur
         )
 
@@ -91,8 +96,8 @@ def limited_as_completed(coros, limit):
     while len(futures) > 0:
         yield first_to_finish()
 
-async def grade_lab(user_id, launch_info, lab, grader_image):
-    src_path = f"{user_id}/materials-x18/materials/x18/lab/1/{lab}/{lab}.ipynb"
+async def grade_lab(homedir_base, user_id, launch_info, lab, grader_image):
+    src_path = f"{homedir_base}{user_id}/materials-x18/materials/x18/lab/1/{lab}/{lab}.ipynb"
     if not os.path.exists(src_path):
         # The princess is in another file server, mario
         print(f"skipping {user_id}")
