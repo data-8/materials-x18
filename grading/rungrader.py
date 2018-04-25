@@ -44,6 +44,12 @@ argparser.add_argument(
     default='/export/pool0/homes',
     help='Base path where all user homedirs are'
 )
+argparser.add_argument(
+    '--parallelism',
+    default=64,
+    type=int,
+    help='Number of concurrent gradings to happen now'
+)
 
 args = argparser.parse_args()
 
@@ -69,7 +75,7 @@ async def main():
             for row in cur
         )
 
-        for res in limited_as_completed(grade_coros, 16):
+        for res in limited_as_completed(grade_coros, args.parallelism):
             await res
 
 def limited_as_completed(coros, limit):
