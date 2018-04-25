@@ -1,7 +1,6 @@
 """
 Script to post grades back to EdX
 """
-import requests
 import json
 import os
 import time
@@ -10,13 +9,24 @@ from lxml import etree
 from hashlib import sha1
 import argparse
 import base64
+import aiohttp
+import asyncio
+import async_timeout
 
 
 class GradePostException(Exception):
     def __init__(self, response=None):
         self.response = response
 
-def post_grade(sourcedid, outcomes_url, consumer_key, consumer_secret, grade):
+
+async def fetch(session, url):
+            return await response.text()
+
+async def main():
+        html = await fetch(session, 'http://python.org')
+        print(html)
+
+async def post_grade(sourcedid, outcomes_url, consumer_key, consumer_secret, grade):
     # Who is treating XML as Text? I am!
     # WHY WOULD YOU MIX MULTIPART, XML (NOT EVEN JUST XML, BUT WSDL GENERATED POX WTF), AND PARTS OF OAUTH1 SIGNING
     # IN THE SAME STANDARD AAAA!
@@ -76,11 +86,16 @@ def post_grade(sourcedid, outcomes_url, consumer_key, consumer_secret, grade):
         'Content-Type': 'application/xml'
     })
 
-    resp = requests.post(outcomes_url, data=post_data, headers=headers)
-    if resp.status_code != 200:
-        raise GradePostException(resp)
 
-    response_tree = etree.fromstring(resp.text.encode('utf-8'))
+    async with async_timeout.timeout(10):
+        async with aiohttp.ClientSession() as session:
+            async with session.post(outcomes_url, data=post_data, headers=headers) as response:
+                resp_text = await response.text()
+
+                if response.status != 200:
+                    raise GradePostException(resp)
+
+    response_tree = etree.fromstring(resp_text.encode('utf-8'))
 
     # XML and its namespaces. UBOOF!
     status_tree = response_tree.find('.//{http://www.imsglobal.org/services/ltiv1p1/xsd/imsoms_v1p0}imsx_statusInfo')
