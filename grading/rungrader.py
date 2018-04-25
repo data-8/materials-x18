@@ -5,7 +5,6 @@ import psycopg2.extras
 import subprocess
 import argparse
 import os
-import docker
 import json
 import asyncio
 from postgrade import post_grade
@@ -50,8 +49,6 @@ args = argparser.parse_args()
 
 LTI_CONSUMER_KEY = os.environ['LTI_CONSUMER_KEY']
 LTI_CONSUMER_SECRET = os.environ['LTI_CONSUMER_SECRET']
-
-docker_client = docker.from_env()
 
 async def main():
     conn = psycopg2.connect(
