@@ -97,7 +97,7 @@ def limited_as_completed(coros, limit):
         yield first_to_finish()
 
 async def grade_lab(homedir_base, user_id, launch_info, lab, grader_image):
-    src_path = f"{homedir_base}{user_id}/materials-x18/materials/x18/lab/1/{lab}/{lab}.ipynb"
+    src_path = f"{homedir_base}/{user_id}/materials-x18/materials/x18/lab/1/{lab}/{lab}.ipynb"
     if not os.path.exists(src_path):
         # The princess is in another file server, mario
         print(f"skipping {user_id}")
