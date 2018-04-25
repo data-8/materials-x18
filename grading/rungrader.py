@@ -65,6 +65,8 @@ async def main():
         cursor_factory=psycopg2.extras.DictCursor
     )
 
+    posted_counts = 0
+    total_counts = 0
     with conn.cursor() as cur:
         cur.execute(
             "select * from lti_launch_info_v1 where resource_link_id=%s",
@@ -76,7 +78,14 @@ async def main():
         )
 
         for res in limited_as_completed(grade_coros, args.parallelism):
-            await res
+            posted = await res
+            if posted:
+                posted_counts += 1
+            total_counts += 1
+            if total_counts % 250:
+                print(f'Posted {posted_counts} scores after checking {total_counts} assignments')
+
+        print(f'Posted {posted_counts} scores after checking {total_counts} assignments')
 
 def limited_as_completed(coros, limit):
     futures = [
@@ -103,8 +112,7 @@ async def grade_lab(homedir_base, user_id, launch_info, lab, grader_image):
     src_path = f"{homedir_base}/{user_id}/materials-x18/materials/x18/lab/1/{lab}/{lab}.ipynb"
     if not os.path.exists(src_path):
         # The princess is in another file server, mario
-        print(f"skipping {user_id}")
-        return
+        return False
 
     command = [
         'docker', 'run',
@@ -128,7 +136,7 @@ async def grade_lab(homedir_base, user_id, launch_info, lab, grader_image):
         for line in stderr.decode('utf-8').split('\n'):
             if 'Killed' in line:
                 # Our container was killed, so let's just skip this one
-                return
+                return False
             if not line.startswith('WARNING:'):
                 print(line)
     grade = float(stdout)
@@ -140,7 +148,8 @@ async def grade_lab(homedir_base, user_id, launch_info, lab, grader_image):
             LTI_CONSUMER_SECRET,
             grade
         )
-        print(f"posted {user_id} with grade {grade}")
+        return True
+    return False
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
