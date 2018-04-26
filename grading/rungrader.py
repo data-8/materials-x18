@@ -134,6 +134,9 @@ async def grade_lab(homedir_base, user_id, launch_info, lab, grader_image):
         content = f.read().encode('utf-8')
         stdout, stderr = await process.communicate(content)
         for line in stderr.decode('utf-8').split('\n'):
+            if line.strip() == '':
+                # Ignore empty lines
+                continue
             if 'Killed' in line:
                 # Our container was killed, so let's just skip this one
                 return False
