@@ -7,6 +7,7 @@ import argparse
 import os
 import json
 import asyncio
+import async_timeout
 from postgrade import post_grade
 from itertools import islice
 
@@ -132,7 +133,12 @@ async def grade_lab(homedir_base, user_id, launch_info, lab, grader_image):
     )
     with open(src_path) as f:
         content = f.read().encode('utf-8')
-        stdout, stderr = await process.communicate(content)
+        try:
+            async with async_timeout.timeout(10):
+                stdout, stderr = await process.communicate(content)
+        except asyncio.TimeoutError:
+            print(f'Grading timed out for {src_path}')
+            return False
         for line in stderr.decode('utf-8').split('\n'):
             if line.strip() == '':
                 # Ignore empty lines
@@ -145,6 +151,9 @@ async def grade_lab(homedir_base, user_id, launch_info, lab, grader_image):
                 raise Exception("Found unrecognized output in stderr from {}, halting".format(' '.join(command)))
     grade = float(stdout)
     if grade != 0.0:
+        if 'lis_outcome_service_url' not in launch_info:
+            print(f'Missing list_outcome_service_url in {src_path}')
+            return False
         await post_grade(
             launch_info['lis_result_sourcedid'],
             launch_info['lis_outcome_service_url'],
