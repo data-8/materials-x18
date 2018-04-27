@@ -134,7 +134,7 @@ async def grade_lab(homedir_base, user_id, launch_info, lab, grader_image):
     with open(src_path) as f:
         content = f.read().encode('utf-8')
         try:
-            async with async_timeout.timeout(10):
+            async with async_timeout.timeout(300):
                 stdout, stderr = await process.communicate(content)
         except asyncio.TimeoutError:
             print(f'Grading timed out for {src_path}')
