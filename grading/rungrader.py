@@ -83,7 +83,7 @@ async def main():
             if posted:
                 posted_counts += 1
             total_counts += 1
-            if total_counts % 250 == 0:
+            if total_counts % 500 == 0:
                 print(f'Posted {posted_counts} scores after checking {total_counts} assignments')
 
         print(f'Posted {posted_counts} scores after checking {total_counts} assignments')
