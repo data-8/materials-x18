@@ -150,6 +150,9 @@ async def grade_lab(homedir_base, user_id, launch_info, lab, grader_image):
                 print(line)
                 raise Exception("Found unrecognized output in stderr from {}, halting".format(' '.join(command)))
     grade = float(stdout)
+    if lab == 'lab02' and grade == 19.2:
+        # HACK
+        grade = 20.0
     if grade != 0.0:
         if 'lis_outcome_service_url' not in launch_info:
             print(f'Missing list_outcome_service_url in {src_path}')
