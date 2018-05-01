@@ -149,7 +149,7 @@ async def grade_lab(homedir_base, user_id, launch_info, lab, grader_image):
             if not line.startswith('WARNING:'):
                 print(line)
                 raise Exception("Found unrecognized output in stderr from {}, halting".format(' '.join(command)))
-    grade = float(stdout)
+    grade = float(stdout.strip().split("\n")[-1])
     if lab == 'lab02' and grade == 19.2:
         # HACK
         grade = 20.0
