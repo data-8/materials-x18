@@ -7,6 +7,7 @@ import argparse
 import os
 import json
 import asyncio
+import math
 import async_timeout
 from postgrade import post_grade
 from itertools import islice
@@ -149,10 +150,8 @@ async def grade_lab(homedir_base, user_id, launch_info, lab, grader_image):
             if not line.startswith('WARNING:'):
                 print(line)
                 raise Exception("Found unrecognized output in stderr from {}, halting".format(' '.join(command)))
-    grade = float(stdout.decode("utf-8").strip().split("\n")[-1])
-    if lab == 'lab02' and grade == 19.2:
-        # HACK
-        grade = 20.0
+    # Round grades up, to cover for bugs in our tests
+    grade = math.ceil(float(stdout.decode("utf-8").strip().split("\n")[-1]))
     if grade != 0.0:
         if 'lis_outcome_service_url' not in launch_info:
             print(f'Missing list_outcome_service_url in {src_path}')
