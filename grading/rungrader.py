@@ -149,7 +149,11 @@ async def grade_lab(homedir_base, user_id, launch_info, lab, grader_image):
             if not line.startswith('WARNING:'):
                 print(line)
                 raise Exception("Found unrecognized output in stderr from {}, halting".format(' '.join(command)))
-    grade = float(stdout)
+    grade = float(stdout.decode("utf-8").strip().split("\n")[-1])
+    if lab == 'lab02' and grade > 0.9:
+        # HACK
+        grade = 1
+        print('rounding up lab02')
     if grade != 0.0:
         if 'lis_outcome_service_url' not in launch_info:
             print(f'Missing list_outcome_service_url in {src_path}')
