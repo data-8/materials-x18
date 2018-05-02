@@ -150,7 +150,7 @@ async def grade_lab(homedir_base, user_id, launch_info, lab, grader_image):
                 print(line)
                 raise Exception("Found unrecognized output in stderr from {}, halting".format(' '.join(command)))
     grade = float(stdout.decode("utf-8").strip().split("\n")[-1])
-    if lab == 'lab02' and grade == 0.96:
+    if lab == 'lab02' and grade > 0.9:
         # HACK
         grade = 1
         print('rounding up lab02')
