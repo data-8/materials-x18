@@ -8,7 +8,8 @@ RUN pip3 install --no-cache-dir \
         matplotlib \
         pandas \
         scipy \
-        fakeokpy
+        fakeokpy \
+        ipywidgets
 
 COPY . /srv/repo
 
