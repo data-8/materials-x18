@@ -7,9 +7,9 @@ RUN pip3 install --no-cache-dir \
         ipykernel \
         matplotlib \
         pandas \
+        ipywidgets \
         scipy \
-        fakeokpy \
-        ipywidgets
+        git+https://github.com/yuvipanda/fakeokclient.git@3798933
 
 COPY . /srv/repo
 
