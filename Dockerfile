@@ -9,7 +9,7 @@ RUN pip3 install --no-cache-dir \
         pandas \
         ipywidgets \
         scipy \
-        git+https://github.com/yuvipanda/fakeokclient.git@3798933
+        okgrade==0.3
 
 COPY . /srv/repo
 
