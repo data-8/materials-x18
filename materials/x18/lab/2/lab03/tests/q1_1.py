@@ -6,6 +6,8 @@ test = {
       'cases': [
         {
           'code': r"""
+          >>> # Please format your answer as a list of integers.
+          ... 
           >>> type(extra_info) == list
           True
           >>> type(extra_info[0]) == int
