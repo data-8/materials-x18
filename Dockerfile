@@ -9,7 +9,7 @@ RUN pip3 install --no-cache-dir \
         pandas \
         ipywidgets \
         scipy \
-        okgrade==0.4.1
+        okgrade==0.4.2
 
 COPY . /srv/repo
 
