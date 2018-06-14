@@ -10,4 +10,4 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # Allow overrides
 cp -r ${DIR}/../materials-grading-overrides/* ${DIR}/../materials/
 
-python3 ${DIR}/grade.py ${IPYNB_PATH}
+ipython ${DIR}/grade.py ${IPYNB_PATH}
