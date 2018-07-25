@@ -136,7 +136,7 @@ async def grade_lab(lab_src_path_template, lab_container_path_template, user_id,
         '--net=none',
         grader_image,
         "/srv/repo/grading/containergrade.bash",
-        lab_container_path_template(lab=lab)
+        lab_container_path_template.format(lab=lab)
     ]
     process = await asyncio.create_subprocess_exec(
         *command,
