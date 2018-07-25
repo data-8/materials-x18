@@ -18,6 +18,16 @@ argparser.add_argument(
     help='Image to use for grading'
 )
 argparser.add_argument(
+    'lab_src_path_template',
+    default='/mnt/prod-fileserver-01/{user_id}/materials-x18/materials/x18/lab/3/{lab}/{lab}.ipynb',
+    help='template used to find a user\'s notebook'
+)
+argparser.add_argument(
+    'lab_container_path_template',
+    default='/srv/repo/materials/x18/lab/3/{lab}/{lab}.ipynb)',
+    help='Template to find original notebook inside container'
+)
+argparser.add_argument(
     'lab',
     help='Lab to grade'
 )
@@ -74,7 +84,7 @@ async def main():
             (args.resource_link_id, )
         )
         grade_coros = (
-            grade_lab(args.homedir_base, row['user_id'], row['launch_info'], args.lab, args.image)
+            grade_lab(args.lab_src_path_template, args.lab_container_path_template, row['user_id'], row['launch_info'], args.lab, args.image)
             for row in cur
         )
 
@@ -109,8 +119,11 @@ def limited_as_completed(coros, limit):
     while len(futures) > 0:
         yield first_to_finish()
 
-async def grade_lab(homedir_base, user_id, launch_info, lab, grader_image):
-    src_path = f"{homedir_base}/{user_id}/materials-x18/materials/x18/lab/1/{lab}/{lab}.ipynb"
+async def grade_lab(lab_src_path_template, lab_container_path_template, user_id, launch_info, lab, grader_image):
+    src_path = lab_src_path_template.format(
+        user_id=user_id,
+        lab=lab
+    )
     if not os.path.exists(src_path):
         # The princess is in another file server, mario
         return False
@@ -123,7 +136,7 @@ async def grade_lab(homedir_base, user_id, launch_info, lab, grader_image):
         '--net=none',
         grader_image,
         "/srv/repo/grading/containergrade.bash",
-        f"/srv/repo/materials/x18/lab/1/{lab}/{lab}.ipynb)"
+        lab_container_path_template(lab=lab)
     ]
     process = await asyncio.create_subprocess_exec(
         *command,
