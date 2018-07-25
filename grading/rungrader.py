@@ -24,7 +24,7 @@ argparser.add_argument(
 )
 argparser.add_argument(
     'lab_container_path_template',
-    default='/srv/repo/materials/x18/lab/3/{lab}/{lab}.ipynb)',
+    default='/srv/repo/materials/x18/lab/3/{lab}/{lab}.ipynb',
     help='Template to find original notebook inside container'
 )
 argparser.add_argument(
@@ -37,7 +37,7 @@ argparser.add_argument(
 )
 argparser.add_argument(
     '--postgres-host',
-    default='/run/cloudsql/data8x-scratch:us-central1:prod-hubshard-db-instance',
+    default='/run/csql/data8x-scratch:us-central1:prod-hubshard-db-instance',
     help='Hostname to use to connect to postgresql db'
 )
 argparser.add_argument(
