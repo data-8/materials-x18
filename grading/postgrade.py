@@ -18,14 +18,6 @@ class GradePostException(Exception):
     def __init__(self, response=None):
         self.response = response
 
-
-async def fetch(session, url):
-            return await response.text()
-
-async def main():
-        html = await fetch(session, 'http://python.org')
-        print(html)
-
 async def post_grade(sourcedid, outcomes_url, consumer_key, consumer_secret, grade):
     # Who is treating XML as Text? I am!
     # WHY WOULD YOU MIX MULTIPART, XML (NOT EVEN JUST XML, BUT WSDL GENERATED POX WTF), AND PARTS OF OAUTH1 SIGNING
@@ -93,7 +85,7 @@ async def post_grade(sourcedid, outcomes_url, consumer_key, consumer_secret, gra
                 resp_text = await response.text()
 
                 if response.status != 200:
-                    raise GradePostException(resp)
+                    raise GradePostException(response)
 
     response_tree = etree.fromstring(resp_text.encode('utf-8'))
 
@@ -102,10 +94,10 @@ async def post_grade(sourcedid, outcomes_url, consumer_key, consumer_secret, gra
     code_major = status_tree.find('{http://www.imsglobal.org/services/ltiv1p1/xsd/imsoms_v1p0}imsx_codeMajor').text
 
     if code_major != 'success':
-        raise GradePostException(resp)
+        raise GradePostException(response)
 
 
-def main():
+async def main():
     argparser = argparse.ArgumentParser()
     argparser.add_argument(
         'lti_launch_info',
@@ -123,7 +115,7 @@ def main():
     consumer_key = os.environ['LTI_CONSUMER_KEY']
     consumer_secret = os.environ['LTI_CONSUMER_SECRET']
 
-    post_grade(
+    await post_grade(
         lti_launch_info['lis_result_sourcedid'],
         lti_launch_info['lis_outcome_service_url'],
         consumer_key,
@@ -132,4 +124,7 @@ def main():
     )
 
 if __name__ == '__main__':
-    main()
+    loop = asyncio.get_event_loop()
+    # Run the commands
+    loop.run_until_complete(main())
+    loop.close()
