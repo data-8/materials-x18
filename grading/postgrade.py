@@ -1,5 +1,35 @@
 """
-Script to post grades back to EdX
+Script to post grades back to EdX.
+
+How to run standalone:
+
+1. Find out the lti_launch_info for the user / lab combo.
+
+   1. Open up a postgresql shell with:
+
+      bash grading/psql
+
+   2. Find the lti_launch_info for the user / lab with:
+
+      SELECT * FROM user_id='user_id' AND resource_link_id='resource_link_id';
+
+      user_id is the EdX user id that is specific for the course. It
+      is the same as the hub user id. You can easily find this from
+      https://edx.readthedocs.io/projects/open-edx-building-and-running-a-course/en/named-release-birch/running_course/course_student.html#access-anonymized
+
+   3. Copy the third row (launch_info)
+
+2. Run this script.
+
+   1. Make sure you are in the venv:
+
+      source bin/activate
+
+   2. Run this!
+
+      python grading/postgrade.py '<json copied from step 1>' <grade>
+
+      The single quotes are important
 """
 import json
 import os
