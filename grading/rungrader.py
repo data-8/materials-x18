@@ -131,7 +131,7 @@ async def grade_lab(lab_src_path_template, lab_container_path_template, user_id,
     command = [
         'docker', 'run',
         '--rm',
-        '-m', '1G',
+        '-m', '2G',
         '-i',
         '--net=none',
         grader_image,
