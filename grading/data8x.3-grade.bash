@@ -1,6 +1,7 @@
 #!/bin/bash
 # Grade data8x.3 in a loop
-set -euo pipefail
+# Explicitly no '-e', since we want grading to continue even if rungrader barfs
+set -uo pipefail
 while 1; do
     docker pull yuvipanda/materials-x18
     echo 'Grading lab01'
