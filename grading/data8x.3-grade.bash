@@ -2,7 +2,7 @@
 # Grade data8x.3 in a loop
 # Explicitly no '-e', since we want grading to continue even if rungrader barfs
 set -uo pipefail
-while 1; do
+while true; do
     docker pull yuvipanda/materials-x18
     echo 'Grading lab01'
     python3 rungrader.py \
