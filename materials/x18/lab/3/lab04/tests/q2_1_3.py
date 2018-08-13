@@ -9,7 +9,7 @@ test = {
           >>> np.isclose(distance_from_in_your_eyes("Lookin' for Love"), 0.017854025951587398)
           True
           """,
-          'hidden': True,
+          'hidden': False,
           'locked': False
         },
       ],
